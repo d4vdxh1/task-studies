@@ -1,0 +1,8 @@
+DIESA - El viaje del valor
+
+Extraé todo el ZIP y abrí DIESA-presentacion.html en Chrome o Edge. No necesita internet ni instalación. Mantené las carpetas fuentes y logos al lado del HTML.
+
+Flechas: avanzar/retroceder. 1-8: capítulos. F: pantalla completa. R: carátula.
+Notas: botón de documento en la barra superior; abre otra ventana. Proyectá solamente la ventana principal. Permití ventanas emergentes si el navegador lo solicita.
+
+Los enlaces externos a sitios oficiales requieren internet. El PDF, la matriz y los logos vectoriales de la competencia están incluidos. Modelo académico; no es un manual interno certificado.
