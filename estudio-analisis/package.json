@@ -1,0 +1,1 @@
+{"name":"modo-practica-analisis-diseno","private":true,"type":"module","scripts":{"test":"node --test tests/*.test.mjs"},"devDependencies":{"jsdom":"31.0.0"}}
