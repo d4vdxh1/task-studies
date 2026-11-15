@@ -29,9 +29,9 @@ npm install
 npm test
 ```
 
-## Tutor opcional de OpenAI
+## Tutor opcional: Gemini u OpenAI
 
-El juego funciona sin API. El servidor agrega corrección de respuestas abiertas y explicaciones personalizadas por ejercicio. No puede activarse en GitHub Pages porque necesita ejecutar código en el servidor.
+El juego funciona sin API. El servidor agrega corrección de respuestas abiertas y explicaciones personalizadas por ejercicio. Admite OpenAI Responses y Gemini mediante la API de compatibilidad de Google; no usa dependencias adicionales ni cambia el contrato de la guía. No puede activarse en GitHub Pages porque necesita ejecutar código en el servidor.
 
 1. Desplegar `estudio-analisis/tutor/server.mjs` en un servicio con Node 22+ y HTTPS. También se puede construir un contenedor desde la raíz del repositorio:
 
@@ -43,23 +43,47 @@ El juego funciona sin API. El servidor agrega corrección de respuestas abiertas
 
    | Variable | Uso |
    | --- | --- |
-   | `OPENAI_API_KEY` | Credencial de OpenAI, solo en servidor |
+   | `AI_PROVIDER` | `gemini` para Google o `openai` para OpenAI; predeterminado `openai` |
+   | `GEMINI_API_KEY` | Credencial de Google AI Studio, solo en servidor y solo para Gemini |
+   | `GEMINI_MODEL` | Opcional; predeterminado `gemini-3.1-flash-lite` |
+   | `OPENAI_API_KEY` | Credencial de OpenAI, solo en servidor y solo para OpenAI |
    | `TUTOR_ACCESS_TOKEN` | Código privado y aleatorio del tutor, mínimo 20 caracteres |
    | `OPENAI_MODEL` | Opcional; por defecto `gpt-4.1-mini`, configurable según disponibilidad |
    | `ALLOWED_ORIGINS` | Orígenes exactos separados por coma; predeterminado `https://d4vdxh1.github.io` |
    | `MAX_DAILY_REQUESTS` | Límite de solicitudes por proceso y día UTC; predeterminado 100 |
    | `PORT` | Puerto del servicio; predeterminado 8787 |
 
-3. En ⚙ de la guía, ingresar la dirección `https://tu-servidor/api/tutor` y el **código del tutor**, nunca la clave de OpenAI. El código se mantiene solo en sessionStorage. Para uso local, agregar `http://localhost:8787` a `ALLOWED_ORIGINS`.
-4. Abrir una misión y probar una explicación escrita. `/health` informa si existen las variables, sin revelar sus valores; no valida saldo ni acceso al modelo.
+3. En ⚙ de la guía, ingresar la dirección `https://tu-servidor/api/tutor` y el **código del tutor**, nunca la clave de Gemini ni de OpenAI. El código se mantiene solo en sessionStorage. Para uso local, agregar `http://localhost:8787` a `ALLOWED_ORIGINS`.
+4. Abrir una misión y probar una explicación escrita. `/health` informa el proveedor y modelo seleccionados y si están configurados la clave y un código de acceso válido, sin revelar secretos; no valida saldo ni acceso al modelo. Si cambiás proveedor, tu dirección `/api/tutor` y el código `TUTOR_ACCESS_TOKEN` se conservan.
 
-El endpoint verifica autorización, origen, tamaño, ejercicio y modo; limita solicitudes, llamadas simultáneas y salida. Envía a Responses API solo la referencia de la misión y el texto ingresado, con `store:false`. No envía el historial de progreso ni usa el material del cliente como instrucciones confiables. El resultado de IA es orientativo y no altera los puntos de los ejercicios cerrados.
+El endpoint verifica autorización, origen, tamaño, ejercicio y modo; limita solicitudes, llamadas simultáneas y salida. Envía solo la referencia de la misión y el texto ingresado al proveedor seleccionado. OpenAI usa Responses API con `store:false`; Gemini usa Chat Completions de compatibilidad de Google con esquema JSON y razonamiento mínimo. Ambos adaptadores validan el mismo resultado. No hay fallback automático: un error de Gemini nunca dispara una llamada facturable a OpenAI. No envía el historial de progreso ni usa el material del cliente como instrucciones confiables. El resultado de IA es orientativo y no altera los puntos de los ejercicios cerrados.
 
-Los límites en memoria se reinician con el proceso y no se comparten entre réplicas. Para uso público multiusuario, usar autenticación por usuario y un contador persistente; el código compartido es apropiado para uso personal. No publicar el código de acceso en el sitio. Mantener una sola instancia para el límite local previsto. CORS por sí solo no es autenticación. La cuota de solicitudes no es un presupuesto monetario de OpenAI: revisar el uso de la cuenta por separado.
+Los límites en memoria se reinician con el proceso y no se comparten entre réplicas. Para uso público multiusuario, usar autenticación por usuario y un contador persistente; el código compartido es apropiado para uso personal. No publicar el código de acceso en el sitio. Mantener una sola instancia para el límite local previsto. CORS por sí solo no es autenticación. La cuota de solicitudes no es un presupuesto monetario del proveedor: revisar el uso de la cuenta por separado.
 
 La integración está preparada, pero requiere un servidor, clave válida y acceso al modelo para funcionar. Las pruebas del repositorio usan un proveedor simulado; no demuestran una llamada real facturable.
 
+### Activar Gemini en el Render existente
+
+En Environment de tu Web Service `task-studies`, agregá:
+
+```text
+AI_PROVIDER=gemini
+GEMINI_MODEL=gemini-3.1-flash-lite
+```
+
+Agregá `GEMINI_API_KEY` como secreto con tu propia clave de Google AI Studio: https://aistudio.google.com/apikey . Conservá `TUTOR_ACCESS_TOKEN` y `ALLOWED_ORIGINS=https://d4vdxh1.github.io`. `OPENAI_API_KEY` puede quedar configurada: no se usa cuando elegís Gemini. Guardá los cambios y esperá el nuevo despliegue. El Start Command sigue siendo `node estudio-analisis/tutor/server.mjs`.
+
+En `https://task-studies.onrender.com/health` deben aparecer `provider: "gemini"`, `model: "gemini-3.1-flash-lite"` y `tutorConfigured: true`. Después probá un ejercicio escrito desde la guía, con el mismo endpoint `https://task-studies.onrender.com/api/tutor` y tu código privado del tutor. Esa devolución confirma el acceso real al modelo; salud solo valida configuración local.
+
+Gemini 3.1 Flash-Lite figura con capa gratuita limitada en la documentación consultada; la cuota efectiva depende del proyecto y se consulta en Google AI Studio. El uso gratuito puede utilizarse para mejorar los productos de Google: no ingreses datos privados que no quieras enviar al proveedor. Ante 429 se explica que hay que revisar cuota/modelo/límites; no se asume falta de saldo. OpenAI distingue créditos agotados, cuota insuficiente, límite de gasto y límite de solicitudes cuando su código de error lo permite. Las respuestas crudas de los proveedores no se devuelven ni se registran.
+
+Las pruebas automatizadas usan respuestas simuladas para ambos proveedores. Hace falta una clave propia para comprobar una consulta real a Gemini; no se usó una clave de Google para esta modificación.
+
 Documentación oficial consultada:
+- https://ai.google.dev/gemini-api/docs/openai
+- https://ai.google.dev/gemini-api/docs/models
+- https://ai.google.dev/gemini-api/docs/pricing
+
 - https://developers.openai.com/api/docs/guides/text
 - https://developers.openai.com/api/docs/guides/api-keys
 - https://developers.openai.com/api/docs/models/gpt-4.1-mini
