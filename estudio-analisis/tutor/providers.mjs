@@ -30,7 +30,7 @@ export function createProvider(config={}){
  return {
   name:valid?name:'invalid',model,configured,
   configurationError:valid?`Falta configurar ${name==='gemini'?'GEMINI_API_KEY':'OPENAI_API_KEY'} o el modelo en el servidor.`:'AI_PROVIDER debe ser openai o gemini.',
-  async complete({instructions,input,schema}){
+  async complete({instructions,input,schema,maxOutputTokens=700,validate}){
    if(!configured)throw new ProviderError('El proveedor no está configurado.','provider_not_configured',503);
    const gemini=name==='gemini';
    const url=gemini?'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions':'https://api.openai.com/v1/responses';
@@ -38,7 +38,7 @@ export function createProvider(config={}){
     model,messages:[{role:'system',content:instructions},{role:'user',content:input}],
     max_tokens:2048,reasoning_effort:'minimal',
     response_format:{type:'json_schema',json_schema:{name:'tutor_feedback',strict:true,schema}}
-   }:{model,store:false,instructions,input,max_output_tokens:700,text:{format:{type:'json_schema',name:'tutor_feedback',strict:true,schema}}};
+   }:{model,store:false,instructions,input,max_output_tokens:maxOutputTokens,text:{format:{type:'json_schema',name:'tutor_feedback',strict:true,schema}}};
    let response;try{
     response=await fetchImpl(url,{method:'POST',headers:{Authorization:`Bearer ${apiKey.trim()}`,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
    }catch{throw new ProviderError(`No se pudo comunicar con ${gemini?'Gemini':'OpenAI'} a tiempo. Podés volver a intentar; la práctica sin IA sigue disponible.`,'provider_connection');}
@@ -55,6 +55,7 @@ export function createProvider(config={}){
     text=(Array.isArray(result?.output)?result.output:[]).flatMap(o=>o.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');
    }
    let feedback;try{feedback=JSON.parse(text);}catch{throw new ProviderError('El tutor no pudo generar una devolución válida. Volvé a intentar.','provider_invalid_response');}
+   if(validate)return validate(feedback);
    if(!feedback||!['correct','partial','incorrect'].includes(feedback.verdict)||typeof feedback.explanation!=='string'||!Array.isArray(feedback.missing)||!feedback.missing.every(x=>typeof x==='string')||typeof feedback.nextQuestion!=='string')throw new ProviderError('La devolución del tutor está incompleta.','provider_invalid_response');
    return {verdict:feedback.verdict,explanation:feedback.explanation,missing:feedback.missing,nextQuestion:feedback.nextQuestion};
   }
