@@ -513,25 +513,45 @@ Reserva(reserva_id PK, alumno_id FK, ejemplar_id FK, solicitada_en, estado)</div
         </section>
 
         <section class="section" id="gui">
-          <p class="eyebrow">Libro 4 · capítulo 10 · material de apoyo</p>
+          <p class="eyebrow">Interfaces · David Ruble · capítulo 10</p>
           <h2>4. Diseño de interfaces gráficas</h2>
-          <p class="section-intro">No se adjuntó el Libro 4, por eso esta sección desarrolla los puntos de tu consigna y no atribuye una terminología específica a ese texto. Compará los criterios exactos con tus apuntes de clase.</p>
-          <h3>Criterios de calidad para una GUI</h3>
-          <p>Una interfaz gráfica permite que una persona complete una tarea con comprensión, seguridad y pocas sorpresas. Su calidad no depende solo de que la pantalla sea agradable: también importa que las reglas sean visibles y que la persona pueda corregir errores.</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Criterio</th><th>Qué significa</th><th>Cómo se vería en la reserva</th></tr></thead>
-              <tbody>
-                <tr><td>Consistencia</td><td>Controles y términos similares se comportan de forma similar.</td><td>“Cancelar” siempre deja la ventana sin confirmar; estados y botones mantienen el mismo vocabulario.</td></tr>
-                <tr><td>Visibilidad del estado</td><td>La interfaz informa qué está haciendo el sistema y qué ocurrió.</td><td>Se muestra “Buscando disponibilidad”, “Reserva confirmada” o “Ejemplar ya reservado”.</td></tr>
-                <tr><td>Prevención de errores</td><td>Diseña para que una acción incorrecta sea difícil de cometer.</td><td>Solo se ofrece confirmar si hay ejemplar disponible y el alumno puede reservar.</td></tr>
-                <tr><td>Recuperación y control</td><td>La persona puede cancelar, corregir y comprender cómo salir.</td><td>Volver al catálogo sin crear la reserva; mensaje que indica qué corregir.</td></tr>
-                <tr><td>Correspondencia con la tarea</td><td>El lenguaje y el orden siguen el trabajo real de la persona.</td><td>Primero se elige el libro, luego la copia/sede y al final se confirma.</td></tr>
-                <tr><td>Accesibilidad</td><td>Texto, foco, controles y mensajes son utilizables por diferentes personas y dispositivos.</td><td>Campos etiquetados, foco visible, teclado, contraste y mensajes que no dependen solo del color.</td></tr>
-                <tr><td>Simplicidad y jerarquía</td><td>La acción principal se entiende sin ocultar información relevante.</td><td>Título y disponibilidad visibles; botón de confirmar destacado solo cuando puede usarse.</td></tr>
-              </tbody>
-            </table>
-          </div>
+          <p class="section-intro">Contrastado con el PDF aportado: capítulo 10, “Conceptos de interfaz gráfica de usuario”, páginas impresas 267–301 (páginas 278–312 del archivo). Coincide temáticamente con 5.2.3 del programa. Confirmar que es el “Libro 4” oficial requiere la bibliografía numerada de la materia.</p>
+          <h3>Qué cambia al pasar de pantalla verde a GUI</h3>
+          <p>La pantalla de caracteres heredada limitaba espacio y favorecía códigos, abreviaturas y flujos rígidos. La GUI permite controles visuales y respuesta a eventos como seleccionar o hacer clic. El diseño aprovecha esa interacción para reconocer objetos y acciones; copiar los códigos antiguos y agregar colores no basta. El teclado sigue siendo importante.</p>
+          <h3 id="gui-criterios">Criterios de buen diseño GUI según Ruble</h3>
+          <p>La lista de la página 271 incluye <strong>diez criterios</strong>, contando retroalimentación, aunque esta no tiene un apartado independiente en el índice. Los ejemplos siguientes son adaptaciones a la biblioteca, no ejemplos textuales del libro.</p>
+          <div class="table-wrap"><table><thead><tr><th>Criterio</th><th>Qué significa</th><th>Ejemplo aplicado</th></tr></thead><tbody>
+            <tr><td>Control de usuario</td><td>Dar opciones y navegación sin permitir violar reglas del negocio; ofrecer teclado además del ratón.</td><td>El alumno puede volver o cancelar antes de confirmar. La aplicación indica cuándo está procesando.</td></tr>
+            <tr><td>Sensibilidad</td><td>Acusar las acciones oportunamente y hacer perceptible la respuesta, también mientras se espera.</td><td>Al pulsar Reservar aparece de inmediato un estado de envío; no queda un botón aparentemente inerte.</td></tr>
+            <tr><td>Personalización</td><td>Adaptar preferencias útiles conservando información crítica y una forma de restaurar valores.</td><td>El alumno reordena columnas de consulta; no puede ocultar una advertencia esencial durante la confirmación.</td></tr>
+            <tr><td>Dirección</td><td>Favorecer el paradigma objeto-acción: elegir un objeto visible y luego una acción aplicable. No significa solamente orientar la navegación.</td><td>Seleccionar una reserva y elegir Cancelar, en lugar de memorizar un comando y su código.</td></tr>
+            <tr><td>Consistencia</td><td>Acordar lenguaje, formatos, controles y comportamiento dentro de la aplicación y con convenciones conocidas.</td><td>Fecha, sede y estado conservan nombres y formatos; Cancelar mantiene el mismo significado.</td></tr>
+            <tr><td>Claridad</td><td>Expresar datos y acciones de forma comprensible, cuestionando abreviaturas y códigos heredados innecesarios.</td><td>Mostrar el nombre de la sede junto al identificador, en vez de exigir interpretar SD_03.</td></tr>
+            <tr><td>Estética</td><td>Ordenar y agrupar para dirigir la atención: alineación, espacio en blanco, jerarquía y uso moderado del color.</td><td>Separar los datos de la copia y la confirmación; evitar iconos decorativos que compitan con la acción principal.</td></tr>
+            <tr><td>Retroalimentación</td><td>Comunicar qué pasó y su significado para la tarea. Se relaciona con la sensibilidad; un mismo diseño puede satisfacer ambas.</td><td>Informar Reserva confirmada o explicar el rechazo y el siguiente paso; no mostrar solo ERR_RSV_03.</td></tr>
+            <tr><td>Indulgencia</td><td>Permitir explorar, abandonar y recuperarse: deshacer cuando corresponda, cancelar, advertir cambios no guardados y confirmar acciones destructivas.</td><td>Editar no confirma por sí solo una transacción. Guardar hace explícito el cambio permanente y Cancelar permite abandonarlo antes.</td></tr>
+            <tr><td>Conciencia de las fortalezas y limitaciones humanas</td><td>Favorecer reconocer sobre memorizar y evitar demasiadas ideas diferentes compitiendo en una ventana.</td><td>Ofrecer selección de libros y acciones visibles en vez de exigir recordar códigos; agrupar información relacionada.</td></tr>
+          </tbody></table></div>
+          <div class="identify"><strong>Para no confundir:</strong> sensibilidad enfatiza que la respuesta sea oportuna y perceptible; retroalimentación comunica lo ocurrido. Se superponen. Dirección se refiere a <strong>objeto-acción</strong>. Indulgencia no elimina validaciones ni autorización del servidor.</div>
+          <p><strong>Límite hrair:</strong> el texto presenta la referencia “siete, más o menos dos” para advertir sobre la sobrecarga de ideas. Estudiala como formulación del autor; no como un límite obligatorio de botones aplicable a cualquier interfaz. El objetivo práctico es reducir memoria exigida y agrupar información comprensible.</p>
+          <p><strong>Guardar explícito:</strong> Ruble objeta que los datos empresariales queden confirmados permanentemente solo por cambiar de fila o foco. Distinguir un borrador local automático de una transacción confirmada evita confundir ese criterio con la prohibición de todo autoguardado.</p>
+          <h3 id="gui-cohesion">Cohesión de ventanas: por qué agrupás eventos</h3>
+          <p>La unidad es el evento de negocio reunido en una ventana o conjunto de ventanas. No se evalúa contando controles. Ruble propone el siguiente orden aproximado de más a menos deseable:</p>
+          <div class="table-wrap"><table><thead><tr><th>Nivel</th><th>Razón de agrupar</th><th>Ejemplo propio</th><th>Compromiso</th></tr></thead><tbody>
+            <tr><td>Funcional</td><td>Un evento o propósito de negocio; puede incluir variantes estrechamente relacionadas.</td><td>Registrar una devolución.</td><td>Es comprensible y reutilizable, pero especializar demasiado multiplica ventanas y navegación.</td></tr>
+            <tr><td>Secuencial</td><td>Eventos agrupados porque uno precede al siguiente.</td><td>Actualizar alumno → registrar préstamo → registrar entrega en una ventana.</td><td>Agiliza tareas repetitivas; puede mezclar código y volverse rígida ante excepciones.</td></tr>
+            <tr><td>Comunicativa</td><td>Eventos reunidos principalmente porque afectan al mismo objeto. El capítulo también usa comunicacional.</td><td>Consultar, renovar y cancelar la reserva seleccionada.</td><td>Comparte acceso a datos y reglas; requiere gestionar acciones pertinentes y permisos de distintos usuarios.</td></tr>
+            <tr><td>Procedural</td><td>Tareas agrupadas por la descripción del puesto de un usuario, aunque no compartan propósito u objeto.</td><td>El encargado maneja reservas y mensajes telefónicos en una misma ventana.</td><td>Puede sobrecargar la pantalla y depender demasiado de cambios en el puesto. No equivale a una mera secuencia de pasos.</td></tr>
+            <tr><td>Temporal</td><td>Eventos agrupados porque ocurren en un mismo momento.</td><td>Abrir correo e imprimir un reporte al llegar por la mañana.</td><td>La relación suele ser débil; puede justificarse en rutinas específicas como cierre de mes.</td></tr>
+            <tr><td>Lógica</td><td>Eventos agrupados para compartir código mediante una ventana genérica con opciones condicionales.</td><td>Selector de muchos reportes con campos que no aplican a todos.</td><td>Ahorra código al principio, pero puede producir campos irrelevantes y mantenimiento complejo.</td></tr>
+            <tr><td>Coincidental</td><td>No existe una relación de negocio defendible; el agrupamiento es arbitrario.</td><td>Una ventana de reservas incluye deportes y juegos porque le gustan al programador.</td><td>No aporta un propósito coherente. El resumen también usa incidental.</td></tr>
+          </tbody></table></div>
+          <p><strong>No hay que convertir todo en ventanas funcionales.</strong> Los primeros tres niveles suelen ser útiles: se comparan comprensión, rapidez de la tarea, navegación y mantenimiento. Un menú por rol puede reunir accesos a ventanas coherentes sin meter todas las tareas del puesto dentro de una misma ventana.</p>
+          <div class="example"><p class="example-label">Diagnóstico para el examen</p><p>Si una pantalla reúne renovar una reserva, cancelarla y tomar mensajes telefónicos porque lo hace el mismo encargado, el conjunto es <strong>procedural</strong>. Se pueden separar mensajes y dejar acciones sobre la reserva con cohesión <strong>comunicativa</strong>. Se gana claridad y mantenimiento a cambio de algo de navegación. La justificación depende de qué une los eventos, no del nombre de la pantalla.</p></div>
+          <h3>Cómo responder una consigna de interfaces</h3>
+          <p>Identificá la falla, nombrá el criterio o la cohesión, citá la pista concreta del caso y proponé una mejora con su compromiso. Decir “la pantalla es fea” no explica qué habría que corregir.</p>
+          <h3>Aplicación complementaria: especificar ventanas</h3>
+          <p>Lo que sigue conserva la guía práctica de maquetas y comportamiento. El <strong>capítulo 11</strong> de Ruble desarrolla navegación y especificación del diseño externo; no se agrega como lectura obligatoria porque el programa aportado indica capítulo 10. Las validaciones, los estados y la accesibilidad siguientes son criterios prácticos complementarios, no una lista textual del capítulo 10.</p>
           <h3>Qué incluir al especificar una ventana</h3>
           <ol>
             <li><strong>Identidad y propósito:</strong> nombre de la ventana y tarea que ayuda a realizar.</li>
@@ -616,13 +636,16 @@ Reserva(reserva_id PK, alumno_id FK, ejemplar_id FK, solicitada_en, estado)</div
             <li>¿Qué información debe ser persistente y qué criterio usarías para elegir archivo o base de datos?</li>
             <li>¿Qué cambia al pasar de una clase de análisis a una clase de diseño?</li>
             <li>Inventá una precondición, una poscondición, un invariante y una excepción para una operación de tu sistema.</li>
+            <li>¿Qué significa dirección en Ruble y cómo se relaciona con objeto-acción?</li>
+            <li>¿En qué se distinguen cohesión secuencial, comunicativa y procedural? Justificá con eventos concretos.</li>
+            <li>¿Qué criterio GUI justifica cancelar cambios antes de guardarlos permanentemente?</li>
             <li>¿Cómo demuestra una especificación de ventana que la interfaz valida, informa errores y permite recuperarse?</li>
           </ol>
           <div class="definition"><p><strong>Buen criterio:</strong> para cada concepto deberías poder dar una definición, reconocer una pista en un problema, construir un ejemplo y decir qué diagrama o documento lo expresa. Si solo podés recitar el nombre, volvé al ejemplo y explicá por qué corresponde.</p></div>
           <div class="source-note">
             <p><strong>Fuente del Libro 1:</strong> Bernd Bruegge y Allen H. Dutoit, <em>Ingeniería de software orientada a objetos</em>, PDF adjunto: capítulo 5, “Análisis” (págs. impresas 131–165); capítulo 6, “Diseño del sistema” (167–229); capítulo 7, “Diseño de objetos” (231–281).</p>
             <p><strong>Numeración revisada:</strong> en el PDF adjunto, 4.1–4.4 corresponden a “Obtención de requerimientos”; “Análisis” está en 5.1–5.5.</p>
-            <p><strong>Libro 4:</strong> no fue adjuntado. La sección de GUI es una síntesis de los temas indicados en tu guía y principios generales de diseño de interfaces; verificá el vocabulario específico con el capítulo y las diapositivas del profesor.</p>
+            <p><strong>Fuente de interfaces verificada:</strong> David Ruble, <em>Análisis y diseño práctico de sistemas cliente/servidor con GUI</em>, PDF aportado, capítulo 10, “Conceptos de interfaz gráfica de usuario” (pp. impresas 267–301). Criterios: pp. 270–289; cohesión de ventanas: pp. 289–299. La asignación como Libro 4 se infiere del temario y requiere la bibliografía numerada; las diapositivas no fueron cotejadas. El capítulo 11 se menciona solo para delimitar alcance.</p>
           </div>
         </section>
       </article>
