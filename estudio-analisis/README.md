@@ -101,3 +101,16 @@ GUI sigue siendo una síntesis pendiente de contraste con Libro 4 y diapositivas
 - No hay bloqueo de misiones, pérdida de vidas ni penalización por equivocarse.
 - Respuestas cerradas deterministas; autoevaluación abierta explícita; IA opcional, con criterios de referencia.
 - Simulacro sin pistas ni corrección inmediata hasta el resultado, separado de la práctica guiada.
+
+## Navegación y examen final (noviembre de 2026)
+
+- Las misiones terminadas conservan su último resultado. Volver a abrirlas muestra ese cierre; “Repetir misión desde el inicio” inicia un intento nuevo explícito. El resultado puede ser una misión recorrida con errores; eso no implica que sus desafíos ya estén resueltos.
+- El avance anterior sigue usando la misma clave/version de guardado. Si una misión antigua ya tiene todos los desafíos cerrados resueltos pero no tiene un resultado archivado, se muestra un resumen histórico a partir de sus registros, sin afirmar que corresponde a un único intento. No se borran puntos ni borradores.
+- “Anterior” conserva selección, clasificación, secuencia y texto. Los ejercicios de práctica ya corregidos se revisan sin sumar intentos otra vez. En el simulacro se pueden cambiar respuestas anteriores; solo se contabilizan al terminar el intento.
+- El examen final se desbloquea al resolver los 44 desafíos cerrados. No exige pagar por IA ni calificar automáticamente las reflexiones escritas de las misiones.
+- Su estructura se inspira en el PDF de referencia del usuario, *Parcial 1 2025*: comprensión (5 + 5), aplicación (15), análisis (15), síntesis (15), evaluación (20) y creación (25), total 100. Las consignas son nuevas y adaptadas a capítulos 5–7 y GUI de la guía. No se copiaron respuestas manuscritas ni se usaron como solucionario. Las rúbricas y el tiempo sugerido son propuestas de práctica, no criterios oficiales inferidos del profesor.
+- Dos consignas cerradas se corrigen por decisión (10 puntos). Cinco desarrollos se evalúan por criterios (90 puntos). Antes de entregar se puede editar y retroceder, sin pistas ni soluciones. Después de entregar aparecen las rúbricas y respuestas posibles.
+- Los desarrollos pendientes no se convierten en ceros ni producen una supuesta nota total. Se muestran puntos automáticos y puntaje pendiente. La autoevaluación manual y la corrección opcional de IA se identifican como orientativas. Cada criterio tiene máximo y el servidor rechaza IDs duplicados, omitidos o puntos fuera de rango.
+- El borrador/resultado del final y sus evaluaciones forman parte del avance local y su exportación/importación. Se conserva un intento final; reiniciarlo requiere confirmación.
+- La API acepta `mode: "final-grade"` solo para los cinco desarrollos preparados y hasta 8000 caracteres. El servidor aporta consigna, caso y rúbrica; no acepta máximos ni criterios enviados por el navegador. La corrección se solicita por consigna para controlar consumo, no automáticamente al entregar.
+- El contrato de IA del final necesita el nuevo servidor en Render. Con Auto-Deploy, `main` dispara el despliegue; si no está habilitado, usar Manual Deploy. Se conservan proveedor, claves, código de acceso y URL.
